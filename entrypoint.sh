@@ -1,6 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o errtrace
+
+function escape {
+	echo -n "$1" | sed -e 's/\./\\./g;s/\//\\\//g;'
+}
 
 if [ "$1" = 'teamvault' ]; then
 
@@ -17,11 +24,13 @@ if [ "$1" = 'teamvault' ]; then
 
 	sed_script=""
 	for var in base_url secret_key fernet_key salt debug database_host database_name database_user database_password database_port; do
-		sed_script+="s,{{$var}},${!var},g;"
+		value=$(escape "${!var}")
+		sed_script+="\$_ =~ s/\{\{$var\}\}/${value}/g;"
 	done
+	sed_script+="print \$_"
 
 	echo "create teamvault.cfg"
-	cat /etc/teamvault.cfg.template | sed -e "$sed_script" > /etc/teamvault.cfg
+	cat /etc/teamvault.cfg.template | perl -ne "$sed_script" > /etc/teamvault.cfg
 
 	echo "migrate database"
 	teamvault upgrade
