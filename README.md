@@ -31,8 +31,30 @@ docker run \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
 -e DATABASE_PORT='5432' \
-bborbe/teamvault \
+bborbe/teamvault
 ```
+
+## Create superuser
+
+```
+docker run -ti \
+-e BASE_URL='teamvault.benjamin-borbe.de' \
+-e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
+-e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
+-e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
+-e DEBUG='enabled' \
+-e DATABASE_HOST='teamvault-postgres' \
+-e DATABASE_NAME='teamvault' \
+-e DATABASE_USER='teamvault' \
+-e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
+-e DATABASE_PORT='5432' \
+bborbe/teamvault \
+teamvault plumbing createsuperuser
+```
+
+## Ready to run
+ 
+`open http://teamvault-address:8000` 
 
 ## Copyright and license
 
