@@ -17,7 +17,7 @@ RUN teamvault setup
 
 EXPOSE 8000
 
-COPY entrypoint.sh /usr/local/bin/
+ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-CMD ["teamvault","run"]
+CMD ["teamvault","run","--bind=:8000"]
