@@ -21,12 +21,12 @@ postgres:9.6
 ```
 docker run \
 -p 8000:8000 \
--e BASE_URL='teamvault.benjamin-borbe.de' \
+-e BASE_URL='http://teamvault.example.com' \
 -e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
 -e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
 -e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
 -e DEBUG='enabled' \
--e DATABASE_HOST='teamvault-postgres' \
+-e DATABASE_HOST='postgres.example.com' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
@@ -38,12 +38,12 @@ bborbe/teamvault
 
 ```
 docker run -ti \
--e BASE_URL='teamvault.benjamin-borbe.de' \
+-e BASE_URL='http://teamvault.example.com' \
 -e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
 -e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
 -e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
 -e DEBUG='enabled' \
--e DATABASE_HOST='teamvault-postgres' \
+-e DATABASE_HOST='postgres.example.com' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
