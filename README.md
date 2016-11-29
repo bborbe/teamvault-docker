@@ -9,7 +9,7 @@ https://github.com/trehn/teamvault
 ```
 docker run \
 -p 5432:5432 \
--e POSTGRES_PASSWORD='jXDtEhnQlEJjrdT8' \
+-e POSTGRES_PASSWORD='S3CR3T' \
 -e PGDATA='/var/lib/postgresql/data/pgdata' \
 -e POSTGRES_USER='teamvault' \
 -e POSTGRES_DB='teamvault' \
@@ -29,7 +29,7 @@ docker run \
 -e DATABASE_HOST='postgres.example.com' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
+-e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
 bborbe/teamvault
 ```
@@ -46,7 +46,7 @@ docker run -ti \
 -e DATABASE_HOST='postgres.example.com' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
+-e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
 bborbe/teamvault \
 teamvault plumbing createsuperuser
@@ -55,6 +55,38 @@ teamvault plumbing createsuperuser
 ## Ready to run
  
 `open http://teamvault-address:8000` 
+
+
+## Run Teamvault with ldap
+
+```
+docker run \
+-p 8000:8000 \
+-e BASE_URL='http://teamvault.example.com' \
+-e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
+-e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
+-e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
+-e DEBUG='enabled' \
+-e DATABASE_HOST='postgres.example.com' \
+-e DATABASE_NAME='teamvault' \
+-e DATABASE_USER='teamvault' \
+-e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
+-e DATABASE_PORT='5432' \
+-e LDAP_ENABLED='true' \
+-e LDAP_SERVER_URI='ldap://ldap.example.com' \
+-e LDAP_BIND_DN='cn=root,dc=example,dc=com' \
+-e LDAP_PASSWORD='S3CR3T' \
+-e LDAP_USER_BASE_DN='ou=users,dc=example,dc=com' \
+-e LDAP_USER_SEARCH_FILTER='(uid=%%(user)s)' \
+-e LDAP_GROUP_BASE_DN='ou=groups,dc=example,dc=com' \
+-e LDAP_GROUP_SEARCH_FILTER='(objectClass=groupOfNames)' \
+-e LDAP_REQUIRE_GROUP='ou=employees,ou=groups,dc=example,dc=com' \
+-e LDAP_ADMIN_GROUP='ou=admins,ou=groups,dc=example,dc=com' \
+-e LDAP_ATTR_EMAIL='mail' \
+-e LDAP_ATTR_FIRST_NAME='givenName' \
+-e LDAP_ATTR_LAST_NAME='sn' \
+bborbe/teamvault
+```
 
 ## Copyright and license
 

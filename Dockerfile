@@ -13,6 +13,7 @@ ENV HOME /teamvault
 WORKDIR /teamvault
 RUN pip install -e .
 ADD teamvault.cfg /etc/teamvault.cfg.template
+ADD teamvault_ldap.cfg /etc/teamvault_ldap.cfg.template
 RUN teamvault setup
 
 EXPOSE 8000
