@@ -88,6 +88,31 @@ docker run \
 bborbe/teamvault
 ```
 
+## Run Teamvault with custom email server
+
+```
+docker run \
+-p 8000:8000 \
+-e BASE_URL='http://teamvault.example.com' \
+-e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
+-e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
+-e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
+-e DEBUG='enabled' \
+-e DATABASE_HOST='postgres.example.com' \
+-e DATABASE_NAME='teamvault' \
+-e DATABASE_USER='teamvault' \
+-e DATABASE_PASSWORD='S3CR3T' \
+-e DATABASE_PORT='5432' \
+-e EMAIL_ENABLED='true' \
+-e EMAIL_HOST='localhost' \
+-e EMAIL_PORT='25' \
+-e EMAIL_USER='smtp@example.com' \
+-e EMAIL_PASSWORD='S3CR3T' \
+-e EMAIL_USE_TLS='False' \
+-e EMAIL_USE_SSL='False' \
+bborbe/teamvault
+```
+
 ## Copyright and license
 
     Copyright (c) 2016, Benjamin Borbe <bborbe@rocketnews.de>

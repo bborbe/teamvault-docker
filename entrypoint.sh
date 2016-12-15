@@ -6,7 +6,7 @@ set -o pipefail
 set -o errtrace
 
 function escape {
-	echo -n "$1" | sed -e 's/\./\\./g;s/\//\\\//g;'
+	echo -n "$1" | sed -e 's/@/\\@/g;s/\./\\./g;s/\//\\\//g;'
 }
 
 if [ "$1" = 'teamvault' ]; then
@@ -22,6 +22,13 @@ if [ "$1" = 'teamvault' ]; then
 	database_password=${DATABASE_PASSWORD:-'jXDtEhnQlEJjrdT8'}
 	database_port=${DATABASE_PORT:-'5432'}
 
+	email_host=${EMAIL_HOST:-'localhost'}
+	email_port=${EMAIL_PORT:-'25'}
+	email_user=${EMAIL_USER:-''}
+	email_password=${EMAIL_PASSWORD:-''}
+	email_use_tls=${EMAIL_USE_TLS:-'False'}
+	email_use_ssl=${EMAIL_USE_SSL:-'False'}
+
 	ldap_server_uri=${LDAP_SERVER_URI:-'ldaps://ldap.example.com'}
 	ldap_bind_dn=${LDAP_BIND_DN:-'cn=root,dc=example,dc=com'}
 	ldap_password=${LDAP_PASSWORD:-'example'}
@@ -36,7 +43,7 @@ if [ "$1" = 'teamvault' ]; then
 	ldap_admin_group=${LDAP_ADMIN_GROUP:-'cn=admins,ou=groups,dc=example,dc=com'}
 
 	sed_script=""
-	for var in ldap_server_uri ldap_bind_dn ldap_password ldap_user_base_dn ldap_user_search_filter ldap_group_base_dn ldap_group_search_filter ldap_require_group ldap_attr_email ldap_attr_first_name ldap_attr_last_name ldap_admin_group base_url secret_key fernet_key salt debug database_host database_name database_user database_password database_port; do
+	for var in email_host email_port email_user email_password email_use_tls email_use_ssl ldap_server_uri ldap_bind_dn ldap_password ldap_user_base_dn ldap_user_search_filter ldap_group_base_dn ldap_group_search_filter ldap_require_group ldap_attr_email ldap_attr_first_name ldap_attr_last_name ldap_admin_group base_url secret_key fernet_key salt debug database_host database_name database_user database_password database_port; do
 		value=$(escape "${!var}")
 		sed_script+="\$_ =~ s/\{\{$var\}\}/${value}/g;"
 	done
@@ -44,6 +51,11 @@ if [ "$1" = 'teamvault' ]; then
 
 	echo "create teamvault.cfg"
 	cat /etc/teamvault.cfg.template | perl -ne "$sed_script" > /etc/teamvault.cfg
+
+	if [ "$EMAIL_ENABLED" = 'true' ]; then
+		echo "add email to teamvault.cfg"
+		cat /etc/teamvault_email.cfg.template | perl -ne "$sed_script" >> /etc/teamvault.cfg
+	fi
 
 	if [ "$LDAP_ENABLED" = 'true' ]; then
 		echo "add ldap to teamvault.cfg"
