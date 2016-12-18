@@ -13,14 +13,14 @@ RUN git clone -b email-config --single-branch https://github.com/bborbe/teamvaul
 ENV HOME /teamvault
 WORKDIR /teamvault
 RUN pip install -e .
-ADD teamvault.cfg /etc/teamvault.cfg.template
-ADD teamvault_ldap.cfg /etc/teamvault_ldap.cfg.template
-ADD teamvault_email.cfg /etc/teamvault_email.cfg.template
+COPY teamvault.cfg /etc/teamvault.cfg.template
+COPY teamvault_ldap.cfg /etc/teamvault_ldap.cfg.template
+COPY teamvault_email.cfg /etc/teamvault_email.cfg.template
 RUN teamvault setup
 
 EXPOSE 8000
 
-ADD entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 CMD ["teamvault","run","--bind=:8000"]
