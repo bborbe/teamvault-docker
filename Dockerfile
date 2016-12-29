@@ -1,5 +1,6 @@
 FROM python:3.4.5
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
+ARG VERSION
 
 RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update --quiet \
