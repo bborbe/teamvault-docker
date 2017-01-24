@@ -9,8 +9,7 @@ RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
 
-#RUN git clone -b master --single-branch https://github.com/trehn/teamvault.git /teamvault
-RUN git clone -b email-config --single-branch https://github.com/bborbe/teamvault.git /teamvault
+COPY sources /teamvault
 ENV HOME /teamvault
 WORKDIR /teamvault
 RUN pip install -e .
