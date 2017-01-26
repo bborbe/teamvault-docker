@@ -52,12 +52,14 @@ if [ "$1" = 'teamvault' ]; then
 	echo "create teamvault.cfg"
 	cat /etc/teamvault.cfg.template | perl -ne "$sed_script" > /etc/teamvault.cfg
 
-	if [ "$EMAIL_ENABLED" = 'true' ]; then
+	email_enabled=${EMAIL_ENABLED:-'false'}
+	if [ "$email_enabled" = 'true' ]; then
 		echo "add email to teamvault.cfg"
 		cat /etc/teamvault_email.cfg.template | perl -ne "$sed_script" >> /etc/teamvault.cfg
 	fi
 
-	if [ "$LDAP_ENABLED" = 'true' ]; then
+	ldap_enabled=${LDAP_ENABLED:-'false'}
+	if [ "$ldap_enabled" = 'true' ]; then
 		echo "add ldap to teamvault.cfg"
 		cat /etc/teamvault_ldap.cfg.template | perl -ne "$sed_script" >> /etc/teamvault.cfg
 	fi

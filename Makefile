@@ -1,14 +1,15 @@
 VERSION ?= latest
 REGISTRY ?= docker.io
-BRANCH ?= 0.6.1
+BRANCH ?= email-config
+REPO ?= https://github.com/bborbe/teamvault.git
 
 default: build
 
 checkout:
-	git -C sources pull || git clone -b $(BRANCH) --single-branch --depth 1 https://github.com/trehn/teamvault.git sources
-	#git -C sources pull || git clone -b email-config --single-branch --depth 1 https://github.com/bborbe/teamvault.git sources
+	git -C sources pull || git clone -b $(BRANCH) --single-branch --depth 1 $(REPO) sources
 
 clean:
+	rm -rf sources
 	docker rmi $(REGISTRY)/bborbe/teamvault:$(VERSION)
 
 build:
