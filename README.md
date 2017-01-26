@@ -31,7 +31,7 @@ docker run \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
-bborbe/teamvault
+bborbe/teamvault:email-config
 ```
 
 ## Create superuser
@@ -48,7 +48,7 @@ docker run -ti \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
-bborbe/teamvault \
+bborbe/teamvault:email-config \
 teamvault plumbing createsuperuser
 ```
 
@@ -85,7 +85,7 @@ docker run \
 -e LDAP_ATTR_EMAIL='mail' \
 -e LDAP_ATTR_FIRST_NAME='givenName' \
 -e LDAP_ATTR_LAST_NAME='sn' \
-bborbe/teamvault
+bborbe/teamvault:email-config
 ```
 
 ## Run Teamvault with custom email server
@@ -110,7 +110,7 @@ docker run \
 -e EMAIL_PASSWORD='S3CR3T' \
 -e EMAIL_USE_TLS='False' \
 -e EMAIL_USE_SSL='False' \
-bborbe/teamvault
+bborbe/teamvault:email-config
 ```
 
 ## Copyright and license
