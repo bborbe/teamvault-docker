@@ -9,7 +9,6 @@ checkout:
 	git -C sources pull || git clone -b $(BRANCH) --single-branch --depth 1 $(REPO) sources
 
 clean:
-	rm -rf sources
 	docker rmi $(REGISTRY)/bborbe/teamvault:$(VERSION)
 
 build:

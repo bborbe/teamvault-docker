@@ -3,8 +3,8 @@
 set -e
 
 make checkout
-tag=$(cd sources;git tag -l --points-at HEAD)
 
+tag=$(cd sources;git tag -l --points-at HEAD)
 if ! test -z "$tag"; then
 	VERSION=${tag} make build
 	VERSION=${tag} make upload
