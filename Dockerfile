@@ -1,4 +1,4 @@
-FROM python:3.4.5
+FROM python:3.6
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
 ARG VERSION
 
