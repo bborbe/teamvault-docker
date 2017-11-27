@@ -7,7 +7,9 @@ https://github.com/trehn/teamvault
 ## Run Postgres
 
 ```
+docker rm teamvault-db
 docker run \
+--name teamvault-db \
 -p 5432:5432 \
 -e POSTGRES_PASSWORD='S3CR3T' \
 -e PGDATA='/var/lib/postgresql/data/pgdata' \
@@ -20,17 +22,19 @@ postgres:9.6
 
 ```
 docker run \
+--link teamvault-db:teamvault-db \
 -p 8000:8000 \
 -e BASE_URL='http://teamvault.example.com' \
 -e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
 -e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
 -e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
 -e DEBUG='enabled' \
--e DATABASE_HOST='postgres.example.com' \
+-e DATABASE_HOST='teamvault-db' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
+-e ALLOWED_HOSTS=localhost \
 bborbe/teamvault:email-config
 ```
 
@@ -38,12 +42,13 @@ bborbe/teamvault:email-config
 
 ```
 docker run -ti \
+--link teamvault-db:teamvault-db \
 -e BASE_URL='http://teamvault.example.com' \
 -e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
 -e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
 -e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
 -e DEBUG='enabled' \
--e DATABASE_HOST='postgres.example.com' \
+-e DATABASE_HOST='teamvault-db' \
 -e DATABASE_NAME='teamvault' \
 -e DATABASE_USER='teamvault' \
 -e DATABASE_PASSWORD='S3CR3T' \
