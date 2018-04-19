@@ -1,13 +1,11 @@
 REGISTRY ?= docker.io
 IMAGE ?= bborbe/teamvault
-ifeq ($(VERSION),)
-	VERSION := $(shell git describe --tags `git rev-list --tags --max-count=1`)
-endif
+VERSION ?= 0.7.3
 
 default: build
 
 build:
-	docker build --no-cache --rm=true -t $(REGISTRY)/$(IMAGE):$(VERSION) .
+	docker build --build-arg VERSION=$(VERSION) --no-cache --rm=true -t $(REGISTRY)/$(IMAGE):$(VERSION) .
 
 upload:
 	docker push $(REGISTRY)/$(IMAGE):$(VERSION)
