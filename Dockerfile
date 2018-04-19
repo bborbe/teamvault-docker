@@ -1,15 +1,24 @@
 FROM python:3.6
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
-ARG VERSION
 
 RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update --quiet \
 	&& DEBIAN_FRONTEND=noninteractive apt-get upgrade --quiet --yes \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install --quiet --yes --no-install-recommends apt-transport-https ca-certificates gettext libffi-dev libldap2-dev libpq-dev libsasl2-dev postgresql postgresql-contrib \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install --quiet --yes --no-install-recommends \
+	git \
+	apt-transport-https \
+	ca-certificates \
+	gettext \
+	libffi-dev \
+	libldap2-dev \
+	libpq-dev \
+	libsasl2-dev \
+	postgresql \
+	postgresql-contrib \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
 
-COPY sources /teamvault
+RUN git clone -b master --single-branch --depth 1 https://github.com/trehn/teamvault /teamvault
 ENV HOME /teamvault
 WORKDIR /teamvault
 RUN pip install -e .

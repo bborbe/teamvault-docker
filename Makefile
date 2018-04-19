@@ -6,9 +6,6 @@ endif
 
 default: build
 
-checkout:
-	git -C sources pull || git clone -b master --single-branch --depth 1 https://github.com/trehn/teamvault sources
-
 build:
 	docker build --no-cache --rm=true -t $(REGISTRY)/$(IMAGE):$(VERSION) .
 
