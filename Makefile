@@ -1,26 +1,20 @@
-VERSION ?= latest
 REGISTRY ?= docker.io
-BRANCH ?= email-config
-REPO ?= https://github.com/bborbe/teamvault.git
+IMAGE ?= bborbe/teamvault
+ifeq ($(VERSION),)
+	VERSION := $(shell git describe --tags `git rev-list --tags --max-count=1`)
+endif
 
 default: build
 
 checkout:
-	git -C sources pull || git clone -b $(BRANCH) --single-branch --depth 1 $(REPO) sources
-
-clean:
-	docker rmi $(REGISTRY)/bborbe/teamvault:$(VERSION)
+	git -C sources pull || git clone -b master --single-branch --depth 1 https://github.com/trehn/teamvault sources
 
 build:
-	docker build --build-arg VERSION=$(VERSION) --no-cache --rm=true -t $(REGISTRY)/bborbe/teamvault:$(VERSION) .
-
-run:
-	docker run \
-	-p 8000:8000 \
-	$(REGISTRY)/bborbe/teamvault:$(VERSION)
-
-shell:
-	docker run -i -t $(REGISTRY)/bborbe/teamvault:$(VERSION) /bin/bash
+	docker build --no-cache --rm=true -t $(REGISTRY)/$(IMAGE):$(VERSION) .
 
 upload:
-	docker push $(REGISTRY)/bborbe/teamvault:$(VERSION)
+	docker push $(REGISTRY)/$(IMAGE):$(VERSION)
+
+clean:
+	docker rmi $(REGISTRY)/$(IMAGE):$(VERSION)
+
