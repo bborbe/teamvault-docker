@@ -1,8 +1,6 @@
 # Teamvault
 
-## Sources
-
-https://github.com/trehn/teamvault
+DockerImage for running Teamvault.
 
 ## Run Postgres
 
@@ -117,3 +115,7 @@ docker run \
 -e EMAIL_USE_SSL='False' \
 bborbe/teamvault:1.0.0
 ```
+
+## Sources
+
+https://github.com/trehn/teamvault

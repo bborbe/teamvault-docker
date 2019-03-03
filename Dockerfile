@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM ubuntu:16.04
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
 ARG VERSION
 
@@ -6,20 +6,27 @@ RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update --quiet \
 	&& DEBIAN_FRONTEND=noninteractive apt-get upgrade --quiet --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install --quiet --yes --no-install-recommends \
-	git \
 	apt-transport-https \
+	build-essential \
 	ca-certificates \
+	curl \
 	gettext \
+	git \
 	libffi-dev \
 	libldap2-dev \
 	libpq-dev \
 	libsasl2-dev \
+	libssl-dev \
 	postgresql \
 	postgresql-contrib \
+	python3 \
+	python3-dev \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
 
-RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/trehn/teamvault /teamvault
+RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
+
+RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/seibert-media/teamvault.git /teamvault
 ENV HOME /teamvault
 WORKDIR /teamvault
 RUN pip install -e .
