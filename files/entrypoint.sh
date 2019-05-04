@@ -41,9 +41,10 @@ if [ "$1" = 'teamvault' ]; then
 	ldap_attr_first_name=${LDAP_ATTR_FIRST_NAME:-'givenName'}
 	ldap_attr_last_name=${LDAP_ATTR_LAST_NAME:-'sn'}
 	ldap_admin_group=${LDAP_ADMIN_GROUP:-'cn=admins,ou=groups,dc=example,dc=com'}
+	ldap_cache_timeout=${LDAP_CACHE_TIMEOUT:-'0'}
 
 	sed_script=""
-	for var in email_host email_port email_user email_password email_use_tls email_use_ssl ldap_server_uri ldap_bind_dn ldap_password ldap_user_base_dn ldap_user_search_filter ldap_group_base_dn ldap_group_search_filter ldap_require_group ldap_attr_email ldap_attr_first_name ldap_attr_last_name ldap_admin_group base_url secret_key fernet_key salt debug database_host database_name database_user database_password database_port; do
+	for var in email_host email_port email_user email_password email_use_tls email_use_ssl ldap_server_uri ldap_bind_dn ldap_password ldap_user_base_dn ldap_user_search_filter ldap_group_base_dn ldap_group_search_filter ldap_require_group ldap_attr_email ldap_attr_first_name ldap_attr_last_name ldap_admin_group ldap_cache_timeout base_url secret_key fernet_key salt debug database_host database_name database_user database_password database_port; do
 		value=$(escape "${!var}")
 		sed_script+="\$_ =~ s/\{\{$var\}\}/${value}/g;"
 	done

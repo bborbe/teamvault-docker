@@ -33,7 +33,7 @@ docker run \
 -e DATABASE_PASSWORD='S3CR3T' \
 -e DATABASE_PORT='5432' \
 -e ALLOWED_HOSTS=localhost \
-bborbe/teamvault:1.0.0
+bborbe/teamvault:0.7.3
 ```
 
 ## Create superuser
