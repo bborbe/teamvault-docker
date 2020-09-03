@@ -2,6 +2,20 @@
 
 DockerImage for running Teamvault.
 
+## Build dockerimage 
+
+Build dockerimage with a specific version. Aviable versions see here: https://github.com/seibert-media/teamvault/tags
+
+```bash
+VERSION=0.8.4 make build upload
+```
+
+Upload to your dockerhub account.
+
+```bash
+IMAGE=yourname/teamvault VERSION=0.8.4 make build upload
+```
+
 ## Run Postgres
 
 ```
