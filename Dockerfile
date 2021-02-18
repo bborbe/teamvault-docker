@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
 ARG VERSION
 
