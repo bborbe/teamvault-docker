@@ -21,6 +21,8 @@ RUN set -x \
 	postgresql-contrib \
 	python3 \
 	python3-dev \
+	python3-distutils \
+	python3-apt \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
 
