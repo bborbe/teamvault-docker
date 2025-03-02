@@ -1,6 +1,6 @@
-FROM ubuntu:20.04
-MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
-ARG VERSION
+FROM python:3.11
+LABEL maintainer="Benjamin Borbe <benjamin.borbe@gmail.com>"
+ARG VERSION=latest
 
 RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update --quiet \
@@ -19,24 +19,25 @@ RUN set -x \
 	libssl-dev \
 	postgresql \
 	postgresql-contrib \
-	python3.9 \
-	python3.9-dev \
-    python3.9-distutils \
+	python3 \
+	python3-dev \
+    python3-setuptools \
+    python-is-python3 \
+    python3-pip \
+    python3-venv \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
-
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-
-RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
 
 RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/seibert-media/teamvault.git /teamvault
 ENV HOME /teamvault
 WORKDIR /teamvault
-RUN pip install -e .
+RUN python -m venv venv
+RUN . venv/bin/activate
+RUN pip install --no-cache-dir -e .
+ENV PATH="/app/venv/bin:$PATH"
 COPY files/teamvault.cfg /etc/teamvault.cfg.template
 COPY files/teamvault_ldap.cfg /etc/teamvault_ldap.cfg.template
 COPY files/teamvault_email.cfg /etc/teamvault_email.cfg.template
-ENV PYTHONPATH /teamvault
 RUN teamvault setup
 
 EXPOSE 8000
