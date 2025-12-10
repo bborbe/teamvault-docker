@@ -2,6 +2,31 @@
 
 DockerImage for running Teamvault.
 
+## Quick Start with Docker Compose
+
+Copy the example environment file and run the services:
+
+```bash
+cp .env.example .env
+make run
+```
+
+Open `http://localhost:8000` in your browser and login with:
+- **Username:** `admin`
+- **Password:** `admin`
+
+Stop with `Ctrl+C`.
+
+> **Note:** The default superuser is created automatically on first run. Change the credentials in `.env` before deploying to production!
+
+**Alternative - run in background:**
+
+```bash
+make start    # Start in background
+make logs     # View logs
+make stop     # Stop services
+```
+
 ## Build dockerimage 
 
 Build dockerimage with a specific version. Aviable versions see here: https://github.com/seibert-media/teamvault/tags
@@ -132,4 +157,4 @@ bborbe/teamvault:1.0.0
 
 ## Sources
 
-https://github.com/trehn/teamvault
+https://github.com/seibert-media/teamvault

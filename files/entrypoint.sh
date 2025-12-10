@@ -67,6 +67,12 @@ if [ "$1" = 'teamvault' ]; then
 	echo "migrate database"
 	teamvault upgrade
 
+	# Create default superuser if specified
+	if [ -n "$SUPERUSER_NAME" ] && [ -n "$SUPERUSER_PASSWORD" ]; then
+		echo "creating or updating superuser $SUPERUSER_NAME"
+		cd /teamvault && TEAMVAULT_CONFIG_FILE=/etc/teamvault.cfg python /usr/local/bin/create_superuser.py
+	fi
+
 	echo "starting django $@"
 fi
 
