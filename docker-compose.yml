@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: teamvault-db
+    environment:
+      POSTGRES_USER: teamvault
+      POSTGRES_PASSWORD: S3CR3T
+      POSTGRES_DB: teamvault
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teamvault"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  teamvault:
+    image: docker.io/bborbe/teamvault:${VERSION:-0.11.3}
+    container_name: teamvault
+    platform: linux/amd64
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      BASE_URL: ${BASE_URL:-http://localhost:8000}
+      SECRET_KEY: ${SECRET_KEY:-Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=}
+      FERNET_KEY: ${FERNET_KEY:-VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=}
+      SALT: ${SALT:-YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=}
+      DEBUG: ${DEBUG:-enabled}
+      DATABASE_HOST: postgres
+      DATABASE_NAME: teamvault
+      DATABASE_USER: teamvault
+      DATABASE_PASSWORD: S3CR3T
+      DATABASE_PORT: 5432
+      SUPERUSER_NAME: ${SUPERUSER_NAME:-admin}
+      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD:-admin}
+      SUPERUSER_EMAIL: ${SUPERUSER_EMAIL:-admin@example.com}
+
+volumes:
+  postgres_data:
