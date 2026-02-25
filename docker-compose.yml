@@ -16,7 +16,7 @@ services:
       retries: 5
 
   teamvault:
-    image: docker.io/bborbe/teamvault:${VERSION:-0.11.3}
+    image: docker.io/bborbe/teamvault:${VERSION:-0.11.7}
     container_name: teamvault
     platform: linux/amd64
     depends_on:
