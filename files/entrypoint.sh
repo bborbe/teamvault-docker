@@ -11,15 +11,23 @@ function escape {
 
 if [ "$1" = 'teamvault' ]; then
 
+	required_vars=(SECRET_KEY FERNET_KEY SALT DATABASE_PASSWORD)
+	for var in "${required_vars[@]}"; do
+		if [ -z "${!var:-}" ]; then
+			echo "missing required environment variable: ${var}" >&2
+			exit 1
+		fi
+	done
+
 	base_url=${BASE_URL:-'teamvault.benjamin-borbe.de'}
-	secret_key=${SECRET_KEY:-'Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ='}
-	fernet_key=${FERNET_KEY:-'VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs='}
-	salt=${SALT:-'YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k='}
+	secret_key=${SECRET_KEY}
+	fernet_key=${FERNET_KEY}
+	salt=${SALT}
 	debug=${DEBUG:-'disabled'}
 	database_host=${DATABASE_HOST:-'teamvault-postgres'}
 	database_name=${DATABASE_NAME:-'teamvault'}
 	database_user=${DATABASE_USER:-'teamvault'}
-	database_password=${DATABASE_PASSWORD:-'jXDtEhnQlEJjrdT8'}
+	database_password=${DATABASE_PASSWORD}
 	database_port=${DATABASE_PORT:-'5432'}
 
 	email_host=${EMAIL_HOST:-'localhost'}

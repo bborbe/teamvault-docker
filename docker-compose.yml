@@ -26,10 +26,10 @@ services:
       - "8000:8000"
     environment:
       BASE_URL: ${BASE_URL:-http://localhost:8000}
-      SECRET_KEY: ${SECRET_KEY:-Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=}
-      FERNET_KEY: ${FERNET_KEY:-VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=}
-      SALT: ${SALT:-YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=}
-      DEBUG: ${DEBUG:-enabled}
+      SECRET_KEY: ${SECRET_KEY:?required}
+      FERNET_KEY: ${FERNET_KEY:?required}
+      SALT: ${SALT:?required}
+      DEBUG: ${DEBUG:-disabled}
       DATABASE_HOST: postgres
       DATABASE_NAME: teamvault
       DATABASE_USER: teamvault

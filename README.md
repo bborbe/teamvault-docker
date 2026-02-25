@@ -1,160 +1,127 @@
-# Teamvault
+# TeamVault Docker
 
-DockerImage for running Teamvault.
+Docker image + compose setup for running [TeamVault](https://github.com/bborbe/teamvault).
 
-## Quick Start with Docker Compose
+## Security first
 
-Copy the example environment file and run the services:
+This image now **requires** these environment variables at runtime:
+
+- `SECRET_KEY`
+- `FERNET_KEY`
+- `SALT`
+- `DATABASE_PASSWORD`
+
+If any are missing, container startup fails fast.
+
+For production, also ensure:
+
+- `DEBUG=disabled`
+- strong unique admin credentials
+- TLS termination in front of TeamVault
+- regular DB backups
+
+---
+
+## Quick start (local dev)
 
 ```bash
 cp .env.example .env
+# edit .env and set secure values at least for:
+# SECRET_KEY, FERNET_KEY, SALT, DATABASE_PASSWORD, SUPERUSER_PASSWORD
+
 make run
 ```
 
-Open `http://localhost:8000` in your browser and login with:
-- **Username:** `admin`
-- **Password:** `admin`
+Open <http://localhost:8000>.
 
-Stop with `Ctrl+C`.
-
-> **Note:** The default superuser is created automatically on first run. Change the credentials in `.env` before deploying to production!
-
-**Alternative - run in background:**
+Alternative:
 
 ```bash
-make start    # Start in background
-make logs     # View logs
-make stop     # Stop services
+make start
+make logs
+make stop
 ```
 
-## Build dockerimage 
+---
 
-Build dockerimage with a specific version. Aviable versions see here: https://github.com/seibert-media/teamvault/tags
+## Build image
+
+Use an explicit TeamVault release tag from:
+<https://github.com/bborbe/teamvault/tags>
 
 ```bash
-VERSION=0.8.4 make build upload
+VERSION=0.11.8 make build
 ```
 
-Upload to your dockerhub account.
+Push to your own registry:
 
 ```bash
-IMAGE=yourname/teamvault VERSION=0.8.4 make build upload
+REGISTRY=docker.io IMAGE=yourname/teamvault VERSION=0.11.8 make build upload
 ```
 
-## Run Postgres
+---
 
-```
-docker rm teamvault-db
-docker run \
---name teamvault-db \
--p 5432:5432 \
--e POSTGRES_PASSWORD='S3CR3T' \
--e PGDATA='/var/lib/postgresql/data/pgdata' \
--e POSTGRES_USER='teamvault' \
--e POSTGRES_DB='teamvault' \
-postgres:9.6
-```
+## Docker compose
 
-## Run Teamvault
+`docker-compose.yml` uses:
 
-```
-docker run \
---link teamvault-db:teamvault-db \
--p 8000:8000 \
--e BASE_URL='http://teamvault.example.com' \
--e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
--e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
--e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
--e DEBUG='enabled' \
--e DATABASE_HOST='teamvault-db' \
--e DATABASE_NAME='teamvault' \
--e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='S3CR3T' \
--e DATABASE_PORT='5432' \
--e ALLOWED_HOSTS=localhost \
-bborbe/teamvault:1.0.0
+- `postgres:16`
+- `docker.io/bborbe/teamvault:${VERSION:-0.11.8}`
+
+Set `VERSION` in `.env` if you want a different TeamVault tag.
+
+---
+
+## Manual docker run (reference)
+
+### Postgres
+
+```bash
+docker run -d \
+  --name teamvault-db \
+  -p 5432:5432 \
+  -e POSTGRES_PASSWORD='replace-me' \
+  -e PGDATA='/var/lib/postgresql/data/pgdata' \
+  -e POSTGRES_USER='teamvault' \
+  -e POSTGRES_DB='teamvault' \
+  postgres:16
 ```
 
-## Create superuser
+### TeamVault
 
-```
-docker run -ti \
---link teamvault-db:teamvault-db \
--e BASE_URL='http://teamvault.example.com' \
--e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
--e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
--e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
--e DEBUG='enabled' \
--e DATABASE_HOST='teamvault-db' \
--e DATABASE_NAME='teamvault' \
--e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='S3CR3T' \
--e DATABASE_PORT='5432' \
-bborbe/teamvault:1.0.0 \
-teamvault plumbing createsuperuser
-```
-
-## Ready to run
- 
-`open http://teamvault-address:8000` 
-
-
-## Run Teamvault with ldap
-
-```
-docker run \
--p 8000:8000 \
--e BASE_URL='http://teamvault.example.com' \
--e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
--e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
--e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
--e DEBUG='enabled' \
--e DATABASE_HOST='postgres.example.com' \
--e DATABASE_NAME='teamvault' \
--e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='jXDtEhnQlEJjrdT8' \
--e DATABASE_PORT='5432' \
--e LDAP_ENABLED='true' \
--e LDAP_SERVER_URI='ldap://ldap.example.com' \
--e LDAP_BIND_DN='cn=root,dc=example,dc=com' \
--e LDAP_PASSWORD='S3CR3T' \
--e LDAP_USER_BASE_DN='ou=users,dc=example,dc=com' \
--e LDAP_USER_SEARCH_FILTER='(uid=%%(user)s)' \
--e LDAP_GROUP_BASE_DN='ou=groups,dc=example,dc=com' \
--e LDAP_GROUP_SEARCH_FILTER='(objectClass=groupOfNames)' \
--e LDAP_REQUIRE_GROUP='ou=employees,ou=groups,dc=example,dc=com' \
--e LDAP_ADMIN_GROUP='ou=admins,ou=groups,dc=example,dc=com' \
--e LDAP_ATTR_EMAIL='mail' \
--e LDAP_ATTR_FIRST_NAME='givenName' \
--e LDAP_ATTR_LAST_NAME='sn' \
-bborbe/teamvault:1.0.0
+```bash
+docker run --rm \
+  --link teamvault-db:teamvault-db \
+  -p 8000:8000 \
+  -e BASE_URL='http://teamvault.example.com' \
+  -e SECRET_KEY='replace-me' \
+  -e FERNET_KEY='replace-me' \
+  -e SALT='replace-me' \
+  -e DEBUG='disabled' \
+  -e DATABASE_HOST='teamvault-db' \
+  -e DATABASE_NAME='teamvault' \
+  -e DATABASE_USER='teamvault' \
+  -e DATABASE_PASSWORD='replace-me' \
+  -e DATABASE_PORT='5432' \
+  -e SUPERUSER_NAME='admin' \
+  -e SUPERUSER_PASSWORD='replace-me' \
+  -e SUPERUSER_EMAIL='admin@example.com' \
+  bborbe/teamvault:0.11.8
 ```
 
-## Run Teamvault with custom email server
+---
 
-```
-docker run \
--p 8000:8000 \
--e BASE_URL='http://teamvault.example.com' \
--e SECRET_KEY='Lk0nKXc2eE55MUg2KHFecUVHW1BzSFc5Kl0jPz1HQ0JLejcpVHJ1UjdtJnJAbyxkfSQ=' \
--e FERNET_KEY='VE_jV0JFmi8r0SqT_fJRHwDatSqSWa9xz_vi3fbahFs=' \
--e SALT='YFp5c2Y/KWZaeGVgaS47NSNRKSNoOXpOZkxlMDp1ZXtsWX09OmEkK2tuPS1pSk46U3k=' \
--e DEBUG='enabled' \
--e DATABASE_HOST='postgres.example.com' \
--e DATABASE_NAME='teamvault' \
--e DATABASE_USER='teamvault' \
--e DATABASE_PASSWORD='S3CR3T' \
--e DATABASE_PORT='5432' \
--e EMAIL_ENABLED='true' \
--e EMAIL_HOST='localhost' \
--e EMAIL_PORT='25' \
--e EMAIL_USER='smtp@example.com' \
--e EMAIL_PASSWORD='S3CR3T' \
--e EMAIL_USE_TLS='False' \
--e EMAIL_USE_SSL='False' \
-bborbe/teamvault:1.0.0
-```
+## LDAP / Email
 
-## Sources
+LDAP and email settings are template-driven via environment variables.
+See:
 
-https://github.com/seibert-media/teamvault
+- `files/teamvault_ldap.cfg.template`
+- `files/teamvault_email.cfg.template`
+
+---
+
+## Source
+
+- TeamVault upstream: <https://github.com/bborbe/teamvault>
+- This docker wrapper: <https://github.com/bborbe/teamvault-docker>
