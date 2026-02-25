@@ -42,6 +42,18 @@ RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pi
 RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/seibert-media/teamvault.git /teamvault
 ENV HOME=/teamvault
 WORKDIR /teamvault
+RUN python3 - <<'PY'
+from pathlib import Path
+p = Path('/teamvault/teamvault/settings.py')
+text = p.read_text()
+if 'import os\n' not in text:
+    text = 'import os\n' + text
+if 'CSRF_TRUSTED_ORIGINS' not in text:
+    marker = "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n"
+    inject = marker + "CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip()]\n"
+    text = text.replace(marker, inject)
+p.write_text(text)
+PY
 RUN pip install --break-system-packages -e .
 RUN npm install && npm run build
 COPY files/teamvault.cfg /etc/teamvault.cfg.template
