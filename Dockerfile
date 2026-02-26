@@ -33,11 +33,10 @@ RUN set -x \
 	postgresql-contrib \
 	python3 \
 	python3-dev \
+	python3-pip \
 	python-is-python3 \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
-
-RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py --break-system-packages
 
 RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/seibert-media/teamvault.git /teamvault
 ENV HOME=/teamvault
