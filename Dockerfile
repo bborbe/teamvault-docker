@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.title="teamvault" \
       org.opencontainers.image.description="TeamVault - Password Management for Teams" \
       org.opencontainers.image.authors="Benjamin Borbe <benjamin.borbe@gmail.com>" \
-      org.opencontainers.image.source="https://github.com/seibert-media/teamvault"
+      org.opencontainers.image.source="https://github.com/bborbe/teamvault"
 
 RUN set -x \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update --quiet \
@@ -39,21 +39,9 @@ RUN set -x \
 
 RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py --break-system-packages
 
-RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/seibert-media/teamvault.git /teamvault
+RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/bborbe/teamvault.git /teamvault
 ENV HOME=/teamvault
 WORKDIR /teamvault
-RUN python3 - <<'PY'
-from pathlib import Path
-p = Path('/teamvault/teamvault/settings.py')
-text = p.read_text()
-if 'import os\n' not in text:
-    text = 'import os\n' + text
-if 'CSRF_TRUSTED_ORIGINS' not in text:
-    marker = "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n"
-    inject = marker + "CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip()]\n"
-    text = text.replace(marker, inject)
-p.write_text(text)
-PY
 RUN pip install --break-system-packages -e .
 RUN npm install && npm run build
 COPY files/teamvault.cfg /etc/teamvault.cfg.template
