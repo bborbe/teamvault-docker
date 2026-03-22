@@ -45,6 +45,3 @@ logs:
 .PHONY: superuser
 superuser:
 	docker-compose exec teamvault teamvault plumbing createsuperuser
-
-.PHONY: buca
-buca: build upload clean apply
