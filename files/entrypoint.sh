@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034,SC2153
+# SC2034: variables appear unused but are accessed via ${!var} indirection
+# SC2153: false positive on uppercase/lowercase variable name mismatch
 
 set -o errexit
 set -o nounset
@@ -81,7 +84,7 @@ if [ "$1" = 'teamvault' ]; then
 		cd /teamvault && TEAMVAULT_CONFIG_FILE=/etc/teamvault.cfg python /usr/local/bin/create_superuser.py
 	fi
 
-	echo "starting django $@"
+	echo "starting django" "$@"
 fi
 
 exec "$@"

@@ -4,6 +4,16 @@ VERSION ?= 0.11.8-fix
 
 default: build
 
+.PHONY: precommit
+precommit: check
+
+.PHONY: test
+test: check
+
+.PHONY: check
+check:
+	shellcheck files/entrypoint.sh
+
 .PHONY: build
 build:
 	DOCKER_BUILDKIT=1 \
