@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2034,SC2153
+# shellcheck disable=SC2002,SC2034,SC2153
 # SC2034: variables appear unused but are accessed via ${!var} indirection
 # SC2153: false positive on uppercase/lowercase variable name mismatch
+# SC2002: cat piped to perl is intentional for readability
 
 set -o errexit
 set -o nounset
