@@ -27,22 +27,29 @@ RUN set -x \
 	libpq-dev \
 	libsasl2-dev \
 	libssl-dev \
-	nodejs \
-	npm \
 	postgresql \
 	postgresql-contrib \
 	python3 \
 	python3-dev \
 	python3-pip \
 	python-is-python3 \
+	unzip \
 	&& DEBIAN_FRONTEND=noninteractive apt-get autoremove --yes \
 	&& DEBIAN_FRONTEND=noninteractive apt-get clean
 
+# The v0.13.0 frontend builds with Rspack 2.x, which requires Node >=20.19
+# (or >=22.12) — Ubuntu 24.04's apt nodejs is 18. Upstream builds with bun
+# (bun.lock pins @rspack/core 2.0.1; their CI runs `bun install --frozen-lockfile
+# && bun run build`). Install bun (brings its own runtime) and build with it —
+# npm without a lockfile resolves newer Rspack 2.1.x which rejects the
+# top-level `cache.type: filesystem` in rspack.common.js.
 RUN git clone -b ${VERSION} --single-branch --depth 1 https://github.com/bborbe/teamvault.git /teamvault
 ENV HOME=/teamvault
 WORKDIR /teamvault
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="${HOME}/.bun/bin:${PATH}"
 RUN pip install --break-system-packages -e .
-RUN npm install && npm run build
+RUN bun install --frozen-lockfile && bun run build
 COPY files/teamvault.cfg /etc/teamvault.cfg.template
 COPY files/teamvault_ldap.cfg /etc/teamvault_ldap.cfg.template
 COPY files/teamvault_email.cfg /etc/teamvault_email.cfg.template
