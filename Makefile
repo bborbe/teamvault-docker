@@ -1,6 +1,6 @@
 REGISTRY ?= docker.io
 IMAGE ?= bborbe/teamvault
-VERSION ?= 0.13.0-fix
+VERSION ?= 0.14.0-fix
 
 default: build
 
